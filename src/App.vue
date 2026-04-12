@@ -1,7 +1,13 @@
 <script setup></script>
 
 <template>
-  <el-button type="primary">Primary Button</el-button>
+  <div class="test">test scss</div>
+  <!-- 一级路由出口组件 -->
+  <router-view></router-view>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+.test {
+  color: $xtxColor;
+}
+</style>
