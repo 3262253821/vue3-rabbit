@@ -1,9 +1,7 @@
 <script setup></script>
 
 <template>
-  <div>
-    <h1>Hello Vue 3!</h1>
-  </div>
+  <el-button type="primary">Primary Button</el-button>
 </template>
 
 <style scoped></style>
