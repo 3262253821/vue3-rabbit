@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+import { useCategoryStore } from "@/stores/category";
+// 使用pinia中的数据
+const categoryStore = useCategoryStore();
+</script>
 
 <template>
   <header class="app-header">
@@ -10,9 +14,11 @@
         <li class="home">
           <RouterLink to="/">首页</RouterLink>
         </li>
-        <li><RouterLink to="/">居家</RouterLink></li>
-        <li><RouterLink to="/">美食</RouterLink></li>
-        <li><RouterLink to="/">服饰</RouterLink></li>
+        <li class="home" v-for="item in categoryStore.categoryList" :key="item.id">
+          <RouterLink active-class="active" :to="`/category/${item.id}`">{{
+            item.name
+          }}</RouterLink>
+        </li>
       </ul>
       <div class="search">
         <i class="iconfont icon-search"></i>
