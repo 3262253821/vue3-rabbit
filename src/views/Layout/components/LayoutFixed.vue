@@ -1,15 +1,34 @@
 <script setup>
 // vueUse
-// useScroll 是vueuse中用于监听滚动事件的函数
+// useScroll 是 vueuse 中用于监听滚动事件的函数
 // 它返回一个对象，包含滚动事件的相关信息，如滚动距离、滚动速度等
 // 我们可以使用 y 来判断是否需要显示固定导航栏
 import { useScroll } from "@vueuse/core";
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 import { useCategoryStore } from "@/stores/category";
-// 这个y 是滚动距离，单位是像素，window是基于浏览器窗口的滚动距离
+// 这个 y 是滚动距离，单位是像素，window 是基于浏览器窗口的滚动距离
 const { y } = useScroll(window);
 
-// 使用pinia中的数据
+// 使用 pinia 中的数据
 const categoryStore = useCategoryStore();
+const route = useRoute();
+
+const activeTopId = computed(() => {
+  if (route.path.startsWith("/category/sub/")) {
+    const subId = String(route.params.id || "");
+    const parent = categoryStore.categoryList.find((top) =>
+      top.children?.some((sub) => String(sub.id) === subId),
+    );
+    return parent ? String(parent.id) : "";
+  }
+  if (route.path.startsWith("/category/")) {
+    return String(route.params.id || "");
+  }
+  return "";
+});
+
+const isCategoryActive = (id) => String(id) === activeTopId.value;
 </script>
 
 <template>
@@ -22,7 +41,7 @@ const categoryStore = useCategoryStore();
           <RouterLink to="/">首页</RouterLink>
         </li>
         <li class="home" v-for="item in categoryStore.categoryList" :key="item.id">
-          <RouterLink active-class="active" :to="`/category/${item.id}`">{{
+          <RouterLink :to="`/category/${item.id}`" :class="{ active: isCategoryActive(item.id) }">{{
             item.name
           }}</RouterLink>
         </li>
@@ -46,7 +65,7 @@ const categoryStore = useCategoryStore();
   z-index: 999;
   background-color: #fff;
   border-bottom: 1px solid #e4e4e4;
-  // 此处为关键样式!!!
+  // 此处为关键样式
   // 状态一：往上平移自身高度 + 完全透明
   transform: translateY(-100%);
   opacity: 0;

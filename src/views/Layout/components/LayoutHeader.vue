@@ -1,7 +1,26 @@
 <script setup>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 import { useCategoryStore } from "@/stores/category";
-// 使用pinia中的数据
+// 使用 pinia 中的数据
 const categoryStore = useCategoryStore();
+const route = useRoute();
+
+const activeTopId = computed(() => {
+  if (route.path.startsWith("/category/sub/")) {
+    const subId = String(route.params.id || "");
+    const parent = categoryStore.categoryList.find((top) =>
+      top.children?.some((sub) => String(sub.id) === subId),
+    );
+    return parent ? String(parent.id) : "";
+  }
+  if (route.path.startsWith("/category/")) {
+    return String(route.params.id || "");
+  }
+  return "";
+});
+
+const isCategoryActive = (id) => String(id) === activeTopId.value;
 </script>
 
 <template>
@@ -15,7 +34,7 @@ const categoryStore = useCategoryStore();
           <RouterLink to="/">首页</RouterLink>
         </li>
         <li class="home" v-for="item in categoryStore.categoryList" :key="item.id">
-          <RouterLink active-class="active" :to="`/category/${item.id}`">{{
+          <RouterLink :to="`/category/${item.id}`" :class="{ active: isCategoryActive(item.id) }">{{
             item.name
           }}</RouterLink>
         </li>
