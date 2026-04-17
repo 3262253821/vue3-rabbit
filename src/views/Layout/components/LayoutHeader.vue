@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { useCategoryStore } from "@/stores/category";
+import HeaderCart from "./HeaderCart.vue";
 // 使用 pinia 中的数据
 const categoryStore = useCategoryStore();
 const route = useRoute();
@@ -44,6 +45,7 @@ const isCategoryActive = (id) => String(id) === activeTopId.value;
         <input type="text" placeholder="搜一搜" />
       </div>
       <!-- 头部购物车 -->
+      <HeaderCart />
     </div>
   </header>
 </template>
