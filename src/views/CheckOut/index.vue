@@ -3,6 +3,7 @@ import { getCheckInfoAPI, createOrderAPI } from "@/apis/checkout";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useCartStore } from "@/stores/cartStore";
+import { ElMessage } from "element-plus";
 
 const cartStore = useCartStore();
 
@@ -13,6 +14,11 @@ const curAddress = ref({}); // 地址对象
 const getCheckInfo = async () => {
   const res = await getCheckInfoAPI();
   checkInfo.value = res.result;
+  if (!checkInfo.value.goods.length) {
+    ElMessage.warning("当前选中的商品已失效，请返回购物车重新选择");
+    router.replace("/cartlist");
+    return;
+  }
   // 适配默认地址，从地址列表中筛选处理  isDefault === 0 的那一项
   const item = checkInfo.value.userAddresses.find((item) => item.isDefault === 0);
   curAddress.value = item;
