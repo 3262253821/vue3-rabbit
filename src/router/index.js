@@ -58,6 +58,7 @@ const router = createRouter({
           component: PayBack,
         },
         {
+          redirect: "/member/user",
           path: "member",
           component: Member,
           children: [
